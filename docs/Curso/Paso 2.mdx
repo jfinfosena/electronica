@@ -1,0 +1,41 @@
+---
+sidebar_position: 2
+draft: false
+slug: /paso2
+---
+
+# Paso 2 
+
+## **Código del Arduino:**
+
+```cpp
+const int sensorPin = A0; // Pin analógico del sensor LM35
+const int ledPins[] = {2, 3, 4, 5, 6, 7, 8, 9}; // Pines digitales para los LEDs
+
+void setup() {
+  Serial.begin(9600); // Iniciar la comunicación serial
+  for (int i = 0; i < 8; i++) {
+    pinMode(ledPins[i], OUTPUT); // Configurar los pines como salidas
+  }
+}
+
+void loop() {
+  int sensorValue = analogRead(sensorPin); // Leer el valor del sensor
+  float temperatura = (sensorValue * 5.0) / 1023.0 * 100.0; // Convertir a grados Celsius
+
+  Serial.print("Temperatura: ");
+  Serial.print(temperatura);
+  Serial.println("°C");
+
+  // Encender los LEDs proporcionalmente a la temperatura
+  for (int i = 0; i < 8; i++) {
+    if (temperatura > (i * 12.5)) { // Cada LED se enciende a cada 12.5°C
+      digitalWrite(ledPins[i], HIGH); 
+    } else {
+      digitalWrite(ledPins[i], LOW);
+    }
+  }
+
+  delay(100); // Retardo para actualizar la lectura
+}
+```

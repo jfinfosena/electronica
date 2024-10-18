@@ -1,0 +1,105 @@
+---
+sidebar_position: 1
+---
+
+# Introducción
+
+#### En este taller, te sumergirás en un proyecto práctico donde aprenderás a construir un **termómetro simple con LEDs**, utilizando un sensor de temperatura y un microcontrolador Arduino. ¡No te preocupes si eres principiante! Te guiaremos paso a paso para que puedas crear tu propio dispositivo y comprender los principios básicos de la electrónica y la programación. 
+
+#### Prepárate para dar tus primeros pasos en el apasionante mundo del mantenimiento electrónico e instrumental industrial. ¡Empieza ya y descubre la magia de la tecnología!
+
+
+## Actividad Arduino: Termómetro LED con una Barra de 8 LEDs
+
+**Objetivo:** Crear un termómetro simple que muestre la temperatura actual usando una barra de 8 LEDs, donde cada LED se ilumina proporcionalmente a la temperatura.
+
+**Materiales:**
+
+* Arduino Uno
+* Sensor de Temperatura LM35
+* Resistencia de 220 Ohm
+* 8 LEDs
+* 8 Resistencias de 220 Ohm (para los LEDs)
+* Protoboard
+* Cables de conexión
+
+**Paso 1: Conexión del circuito:**
+
+1. **Conectar el sensor de temperatura LM35:**
+    * Conecte el pin VCC del LM35 al pin 5V del Arduino.
+    * Conecte el pin GND del LM35 al pin GND del Arduino.
+    * Conecte el pin OUT del LM35 al pin analógico A0 del Arduino.
+2. **Conectar los LEDs:**
+    * Conecte los ánodos (patas largas) de los LEDs a las siguientes salidas digitales del Arduino: 2, 3, 4, 5, 6, 7, 8, 9.
+    * Conecte los cátodos (patas cortas) de los LEDs a través de una resistencia de 220 Ohm a GND.
+3. **Conectar las resistencias:**
+    * Cada LED debe tener una resistencia de 220 Ohm conectada entre su cátodo y GND para limitar la corriente.
+
+**Paso 2: Código del Arduino:**
+
+```cpp
+const int sensorPin = A0; // Pin analógico del sensor LM35
+const int ledPins[] = {2, 3, 4, 5, 6, 7, 8, 9}; // Pines digitales para los LEDs
+
+void setup() {
+  Serial.begin(9600); // Iniciar la comunicación serial
+  for (int i = 0; i < 8; i++) {
+    pinMode(ledPins[i], OUTPUT); // Configurar los pines como salidas
+  }
+}
+
+void loop() {
+  int sensorValue = analogRead(sensorPin); // Leer el valor del sensor
+  float temperatura = (sensorValue * 5.0) / 1023.0 * 100.0; // Convertir a grados Celsius
+
+  Serial.print("Temperatura: ");
+  Serial.print(temperatura);
+  Serial.println("°C");
+
+  // Encender los LEDs proporcionalmente a la temperatura
+  for (int i = 0; i < 8; i++) {
+    if (temperatura > (i * 12.5)) { // Cada LED se enciende a cada 12.5°C
+      digitalWrite(ledPins[i], HIGH); 
+    } else {
+      digitalWrite(ledPins[i], LOW);
+    }
+  }
+
+  delay(100); // Retardo para actualizar la lectura
+}
+```
+
+**Explicación del código:**
+
+1. `const int sensorPin = A0;`: Define el pin analógico donde está conectado el sensor.
+2. `const int ledPins[] = {2, 3, 4, 5, 6, 7, 8, 9};`: Define los pines digitales donde están conectados los LEDs.
+3. `void setup()`: 
+    * `Serial.begin(9600);`: Inicia la comunicación serial para mostrar la temperatura en el monitor serial.
+    * `pinMode(ledPins[i], OUTPUT);`: Configura cada pin como salida digital.
+4. `void loop()`:
+    * `int sensorValue = analogRead(sensorPin);`: Lee el valor analógico del sensor.
+    * `float temperatura = (sensorValue * 5.0) / 1023.0 * 100.0;`: Convierte el valor analógico a grados Celsius.
+    * `Serial.print("Temperatura: "); Serial.print(temperatura); Serial.println("°C");`: Imprime la temperatura en el monitor serial.
+    * `for (int i = 0; i < 8; i++)`: Recorre los 8 LEDs.
+        * `if (temperatura > (i * 12.5))`: Comprueba si la temperatura es mayor que el umbral para encender el LED.
+        * `digitalWrite(ledPins[i], HIGH);`: Enciende el LED.
+        * `digitalWrite(ledPins[i], LOW);`: Apaga el LED.
+    * `delay(100);`: Retardo para actualizar la lectura cada 100 milisegundos.
+
+**Paso 3: Subir el código:**
+
+1. Conecta el Arduino a tu ordenador.
+2. Abre el código del Arduino en el IDE.
+3. Sube el código al Arduino usando el botón "Upload".
+
+**Paso 4: Ver el resultado:**
+
+1. Abre el monitor serial del Arduino.
+2. Verás la temperatura actual en el monitor serial.
+3. La barra de LEDs se encenderá gradualmente a medida que la temperatura aumenta.
+
+**Nota:**
+
+* Puedes ajustar el valor "12.5" en el código para cambiar la sensibilidad del termómetro. Un valor menor hará que la barra de LEDs responda más rápidamente a los cambios de temperatura.
+* Asegúrate de que los LEDs que utilizas sean compatibles con la tensión de 5V del Arduino.
+* Si la barra de LEDs no se enciende correctamente, revisa las conexiones y asegúrate de que los pines estén correctamente configurados en el código.
